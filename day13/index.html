@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Example</title>
+</head>
+<body>
+  <h1>WebSocket Example</h1>
+  <form id="messageForm">
+    <label for="messageInput">Enter Message:</label>
+    <input type="text" id="messageInput" />
+    <button type="submit">Send</button>
+  </form>
+  <div id="output"></div>
+
+  <script>
+    const socket = new WebSocket(`ws://${window.location.host}`);
+    const messageForm = document.getElementById('messageForm');
+    const messageInput = document.getElementById('messageInput');
+    const outputDiv = document.getElementById('output');
+
+    // Connection opened
+    socket.addEventListener('open', (event) => {
+      console.log('WebSocket connection opened');
+    });
+
+    // Listen for messages
+    socket.addEventListener('message', (event) => {
+      const message = event.data;
+      console.log('Message from server:', message);
+
+      // Display the received message in the output div
+      outputDiv.innerHTML += `<p>${message}</p>`;
+    });
+
+    // Connection closed
+    socket.addEventListener('close', (event) => {
+      console.log('WebSocket connection closed');
+    });
+
+    // Form submission event
+    messageForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const message = messageInput.value;
+
+      // Send the message to the server
+      socket.send(message);
+
+      // Clear the input field
+      messageInput.value = '';
+    });
+  </script>
+</body>
+</html>
