@@ -7,7 +7,7 @@ const app = express();
 function connectToMongoDB() {
   mongoose
     .connect(
-      "mongodb url here",
+      "mongoDB url",
     )
     .then(() => {
       console.log("Connected to MongoDB");
@@ -41,13 +41,29 @@ function addUserToDatabase(user) {
         console.log(error);
     });
 }
+const user = [
+  {
+    username: "mukul",
+    email: "mk@gmail.com",
+  },
+  {
+    username: "mukul1",
+    email: "mk1@gmail.com",
+  },
+  {
+    username: "mukul2",
+    email: "mk2@gmail.com",
+  },
+];
+user.forEach((user) => {
+  addUserToDatabase(user);
+});
+async function  getAllUsers(req, res) {
+  const users =  await User.find({});
+  return res.json({data : users});
+  }
+app.get("/users", getAllUsers);
 
-const user = {
-  username: "mukul",
-  email: "mk@gmail.com",
-};
-
-addUserToDatabase(user);
 
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
