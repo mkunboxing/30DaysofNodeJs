@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaborative Text Editor</title>
+</head>
+<body>
+  <textarea id="editor"></textarea>
+  <button id="resetButton">Reset Text</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const editor = document.getElementById('editor');
+    const resetButton = document.getElementById('resetButton');
+
+    editor.addEventListener('input', () => {
+      socket.emit('updateText', editor.value);
+    });
+
+    resetButton.addEventListener('click', () => {
+      socket.emit('resetText');
+    });
+
+    socket.on('updateText', (clients) => {
+      const text = Object.values(clients).join('\n');
+      editor.value = text;
+    });
+  </script>
+</body>
+</html>
